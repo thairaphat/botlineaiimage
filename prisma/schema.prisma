@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model LineImageRecord {
+  id             Int      @id @default(autoincrement())
+  lineMessageId  String?
+  groupId        String?
+  userId         String?
+  imagePath      String?
+  rawText        String?  @db.LongText
+  parsedJson     Json?
+  createdAt      DateTime @default(now())
+}
+
+model AttendanceImageRecord {
+  id                 Int      @id @default(autoincrement())
+  lineImageRecordId  Int?
+  lineMessageId      String?
+  userId             String?
+  groupId            String?
+  imagePath          String?
+
+  fullName           String?
+  fullNameRaw        String?
+  fullNameKey        String?
+  employeeCode       String?
+  migrantVendor      String?
+  hubName            String?
+  position           String?
+  shiftName          String?
+  shiftStart         String?
+  shiftEnd           String?
+  checkType          String? // IN หรือ OUT
+  uploadTimestamp    DateTime?
+  photoTimestamp     DateTime?
+  workDate           DateTime?
+  locationText       String?
+  latitude           Float?
+  longitude          Float?
+  otHours            Float?
+  rawText            String?  @db.LongText
+  parsedJson         Json?
+  confidence         Float?
+  
+  matchedEmployeeId  String?
+  matchConfidence    Float?
+  matchStatus        String?
+  matchReason        String?
+  
+  sessionId          Int?
+  imageSetId         String?
+  createdAt          DateTime @default(now())
+}
+
+model AttendanceSession {
+  id                 Int      @id @default(autoincrement())
+  userId             String?
+  fullNameKey        String?
+  workDate           DateTime?
+  
+  fullNameRaw        String?
+  matchedEmployeeId  String?
+  matchConfidence    Float?
+  matchStatus        String?
+  matchReason        String?
+  
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
