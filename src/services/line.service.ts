@@ -7,6 +7,8 @@ import { prisma } from "../db";
 
 const { MessagingApiBlobClient } = messagingApi;
 
+console.log("[BOOT] line service init");
+
 export class LineService {
   private static blobClient = new MessagingApiBlobClient({
     channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || "",
@@ -250,3 +252,5 @@ export class LineService {
     }
   }
 }
+
+console.log("[BOOT] line service init complete");

@@ -3,8 +3,14 @@ import { LineService } from "./services/line.service";
 import { prisma } from "./db";
 import * as dotenv from "dotenv";
 
+console.log("[BOOT] starting server");
 dotenv.config();
+console.log("[BOOT] env loaded");
 
+const PORT = Number(process.env.PORT || 3002);
+console.log(`[BOOT] port resolved: ${PORT}`);
+
+console.log("[BOOT] before app.listen");
 const app = new Elysia()
   // Health check route
   .get("/", () => ({
@@ -95,6 +101,7 @@ const app = new Elysia()
     }
   })
 
-  .listen(process.env.PORT || 3000);
+  .listen(PORT);
 
+console.log("[BOOT] server started");
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);

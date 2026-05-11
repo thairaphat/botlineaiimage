@@ -22,10 +22,21 @@ const adapter = new PrismaMariaDb({
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-export const prisma = new PrismaClient({
-  adapter,
-  log: ["error", "warn"],
-});
+console.log("[BOOT] prisma init");
+
+export const prisma = (() => {
+  try {
+    const client = new PrismaClient({
+      adapter,
+      log: ["error", "warn"],
+    });
+    console.log("[BOOT] prisma init complete");
+    return client;
+  } catch (error) {
+    console.error("[BOOT] prisma init failed:", error);
+    throw error;
+  }
+})();
 
 console.log("[DB] Prisma initialized. Models:", Object.keys(prisma).filter(k => !k.startsWith("$") && !k.startsWith("_")));
 if ((prisma as any).attendanceImageRecord) {
