@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { OCRService } from "./ocr.service";
 import { ParserService } from "./parser.service";
+import { GeminiService } from "./gemini.service";
 import { prisma } from "../db";
 
 const { MessagingApiBlobClient } = messagingApi;
@@ -46,7 +47,15 @@ export class LineService {
       console.log(`[LineService] rawText: ${rawText}`);
 
       // 4. Parse data
-      const parsedJson = await ParserService.parseText(rawText);
+      let parsedJson = await ParserService.parseText(rawText);
+      const shouldUseGemini = rawText.trim().length < 30 || Number(parsedJson.confidence || 0) < 0.7;
+
+      if (shouldUseGemini) {
+        const geminiJson = await GeminiService.parseAttendanceImage(filePath);
+        if (geminiJson) {
+          parsedJson = geminiJson;
+        }
+      }
 
       // 5. Save to MySQL
       console.log(`[LineService] Before prisma create`);
